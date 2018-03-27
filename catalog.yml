@@ -1,0 +1,17 @@
+PREDEF:
+  - intro.re
+
+CHAPS:
+  - 01_setup_hello.re
+  - 02_fb.re
+  - 03_kbd.re
+  - 04_intr.re
+  - 05_rofs.re
+  - 06_image_viewer.re
+
+APPENDIX:
+  - a1_poiboot.re
+
+POSTDEF:
+  - postscript.re
+  - refs.re
