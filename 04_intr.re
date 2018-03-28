@@ -196,6 +196,7 @@ default_handler:
 //list[040_kbc_handler][040_intr/handler.s(kbc_handler)]{
 /* ・・・ 省略 ・・・ */
 
+/* 追加(ここから) */
 	.global	kbc_handler
 kbc_handler:
 	push	%rax
@@ -214,6 +215,7 @@ kbc_handler:
 	pop	%rcx
 	pop	%rax
 	iretq
+/* 追加(ここまで) */
 //}
 
 default_handlerは、呼び出されると無限ループに陥るためハンドラからリターンすることが無いので、@<list>{040_default_handler}の様な記述で良いのですが、kbc_handlerは必要な処理を終えたらユーザ空間へリターンする必要があります。@<list>{040_kbc_handler}では、割り込みハンドラとして必要な入口/出口処理のみアセンブラで記述し、主要な処理はC言語の関数(do_kbc_interrupt(後述))を呼び出す(call命令)ようにしています。
@@ -318,6 +320,7 @@ inline unsigned char io_read(unsigned short addr);
  * set_intr_desc関数: 引数で指定されたハンドラと割り込み番号で当該デスクリプタを設定する
 
 intr.cは@<list>{040_intr_c}の通りです。
+
 //list[040_intr_c][040_intr/intr.c(intr_init()とset_intr_desc())][c]{
 #include <intr.h>
 #include <x86.h>
@@ -421,6 +424,7 @@ struct interrupt_descriptor idt[MAX_INTR_NO];
 unsigned long long idtr[2];	/* 追加 */
 
 /* ・・・ 省略 ・・・ */
+
 void intr_init(void)
 {
 	int i;
@@ -767,6 +771,8 @@ kbc_exit:
 }
 /* ・・・ 省略 ・・・ */
 //}
+
+#@# todo ここまでcode確認済み
 
 ===[column] AEOI(自動EOI)モードとは
 @<table>{pic_ioaddr}のICW4のbit1で設定する"AEOI"は「自動EOI」と呼ばれるもので、設定されているとソフトウェア的な割り込みハンドラの処理とは非同期にPICが次の割り込みを受け付けるようになります。

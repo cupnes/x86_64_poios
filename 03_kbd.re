@@ -205,7 +205,7 @@ char getc(void)
 
 そして、kbc.cのgetc関数と、keymap配列で使用しているASCII_ESC等のASCII制御文字は外部からも参照できるよう"kbc.h"に宣言と定義を用意します(@<list>{030_kbc_h})。
 
-//list[030_kbc_h][030_keyinput_polling/kbc.h][c]{
+//list[030_kbc_h][030_keyinput_polling/include/kbc.h][c]{
 #ifndef _KBC_H_
 #define _KBC_H_
 

@@ -1,6 +1,6 @@
 = フレームバッファを制御する
 == 画面を単色で塗りつぶす
-最初に行う"Hello world"的プログラムとして、画面を単色で塗りつぶしてみます。本書で使用するブートローダ"poiboot"はメモリへロードしたカーネルを実行する際、C言語の引数としてフレームバッファの先頭アドレスを渡しますので、それを使用することで画面描画が行えます。
+最初に行う"Hello world"的プログラムとして、画面を単色で塗りつぶしてみます。本書で使用するブートローダー"poiboot"はメモリへロードしたカーネルを実行する際、C言語の引数としてフレームバッファの先頭アドレスを渡しますので、それを使用することで画面描画が行えます。
 
 ここで紹介するプログラムはサンプルディレクトリ内の"020_fill"ディレクトリに格納しています。
 
@@ -45,7 +45,7 @@ void start_kernel(void *_t __attribute__ ((unused)), struct framebuffer *fb,
 }
 //}
 
-start_kernel関数がブートローダからジャンプしてくる先の関数で、第2引数に"framebuffer"という構造体のポインタとしてフレームバッファの情報を渡してくれます。第1引数にもブートローダから何か情報を渡しているのですが、本書では使わないので気にしなくて構いません@<fn>{about_start_kernel_1st_arg}。第3引数はブートローダが配置したファイルシステムの先頭アドレスです。これについては後の章で使用します。
+start_kernel関数がブートローダーからジャンプしてくる先の関数で、第2引数に"framebuffer"という構造体のポインタとしてフレームバッファの情報を渡してくれます。第1引数にもブートローダーから何か情報を渡しているのですが、本書では使わないので気にしなくて構いません@<fn>{about_start_kernel_1st_arg}。第3引数はブートローダーが配置したファイルシステムの先頭アドレスです。これについては後の章で使用します。
 //footnote[about_start_kernel_1st_arg][UEFIのSystemTableというものの先頭アドレスです。]
 
 framebuffer構造体の"base"メンバはフレームバッファの先頭アドレスです。ピクセルフォーマットは"pixelformat"構造体の通りで、「B(青)・G(緑)・R(赤)・Reserved(予約)」の順に各1バイトで並んでいます。加えて、framebufferの"hr"メンバには画面の水平解像度、"vr"には垂直解像度が格納されていますので、start_kernel関数のforの二重ループのコードで画面を単色で塗りつぶすことができます。ここでは緑一色に塗りつぶしています。
@@ -53,7 +53,7 @@ framebuffer構造体の"base"メンバはフレームバッファの先頭アド
 start_kernel関数の戻り先は無いので、最後は無限ループで止めています。
 
 == リンカスクリプトを書く
-ソースコードは作成できたので、ブートローダ"poiboot"がロード・実行できる形に実行ファイルを生成します。
+ソースコードは作成できたので、ブートローダー"poiboot"がロード・実行できる形に実行ファイルを生成します。
 
 poibootがカーネルバイナリをロード・実行する際に行う事は以下の通りです。
 
@@ -214,7 +214,7 @@ clean:
 .PHONY: run clean  # runを追加
 //}
 
-@<list>{020_fill_make2}は、サンプルのディレクトリの一つ上の階層にfsディレクトリがブートローダ配置済みの状態で存在していることを前提としています。
+@<list>{020_fill_make2}は、サンプルのディレクトリの一つ上の階層にfsディレクトリがブートローダー配置済みの状態で存在していることを前提としています。
 
 予め、020_fillの一つ上の階層に@<list>{020_fill_file_placement2}のようにディレクトリ構造を作っておいてください。
 
@@ -233,6 +233,7 @@ fs/
 実機で試す際は、USBフラッシュメモリ等のPCの起動ディスクとして使用できるストレージへfsディレクトリ内のファイルをコピーし、コピーしたストレージから起動します。
 
 === USBフラッシュメモリをGPTフォーマット
+#@# todo: ふろくへ
 ここでは始めに旧来のMS-DOSパーティションテーブルではなく、UEFIで新仕様として加わったGPT(GUID Partition Table)形式でUSBフラッシュメモリをフォーマットしてみます。
 
 なお、USBフラッシュメモリの再フォーマットをしたくない場合、このフォーマット手順は飛ばして構いません。UEFIファームウェアはFATパーティションを認識でき、たいていのUSBフラッシュメモリは購入時にFATでフォーマットされているため、fsディレクトリ以下のディレクトリ構造をそのままUSBフラッシュメモリへコピーし、起動するだけで動くはずです。
@@ -733,7 +734,7 @@ void puts(char *s);
 
 それでは、set_fg関数とputs関数を使用して"HELLO WORLD!"を出力するようmain.cを書き替えてみます(@<list>{022_font_main_c})。
 
-//listnum[022_font_main_c][022_font/main.c][c]{
+//list[022_font_main_c][022_font/main.c][c]{
 #include <fb.h>
 #include <fbcon.h>
 
@@ -753,7 +754,7 @@ void start_kernel(void *_t __attribute__ ((unused)), struct framebuffer *fb,
 
 最後に、Makefileへfont.cとfbcon.cをコンパイルの対象として追加します(@<list>{022_font_makefile})。
 
-//listnum[022_font_makefile][022_font/Makefile]{
+//list[022_font_makefile][022_font/Makefile]{
 TARGET = kernel.bin
 CFLAGS = -Wall -Wextra -nostdinc -nostdlib -fno-builtin -fno-common -Iinclude
 LDFLAGS = -Map kernel.map -s -x -T kernel.ld
