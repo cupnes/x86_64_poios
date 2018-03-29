@@ -11,6 +11,7 @@ CHAPS:
 
 APPENDIX:
   - a1_poiboot.re
+  - a2_gpt.re
 
 POSTDEF:
   - postscript.re
