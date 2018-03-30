@@ -2,33 +2,33 @@
 次の章で画像ビューアを作ってみるに当たり、読み取り専用の簡易的なファイルシステムを用意してみます。
 
 == poibootの第2のロード機能
-poibootはカーネル(kernel.bin)だけでなく、もうひとつイメージをロードしてくれる機能があり、"apps.img"というファイル名でkernel.binと同じ階層に配置しておくと(@<list>{apps_img_same_floor})、poibootは0x00200000に配置します。
+poibootはカーネル(kernel.bin)だけでなく、もうひとつイメージをロードしてくれる機能があり、"fs.img"というファイル名でkernel.binと同じ階層に配置しておくと(@<list>{apps_img_same_floor})、poibootは0x00200000に配置します。
 
-//list[apps_img_same_floor][apps.imgはkernel.imgと同じ階層へ配置]{
+//list[apps_img_same_floor][fs.imgはkernel.imgと同じ階層へ配置]{
 fsディレクトリ、あるいはUSBフラッシュメモリ等
 ├─ EFI/
 │   └─ BOOT/
 │        └─ BOOTX64.EFI
 ├─ kernel.bin
-└─ apps.img  ← kernel.binと同じ階層に配置
+└─ fs.img  ← kernel.binと同じ階層に配置
 //}
 
 この章では、poibootが配置する0x00200000以降をファイルシステムの領域とし、ファイルシステム領域上のバイナリ列をファイルと見立てるルールを決めることで、簡易的なファイルシステムとします。
 
 == 単一のテキストファイルを読んでみる
-まずはpoibootの機能確認として、単一のテキストファイルをapps.imgというファイル名で配置し、0x00200000へファイルの内容がロードされていることを確認してみます。
+まずはpoibootの機能確認として、単一のテキストファイルをfs.imgというファイル名で配置し、0x00200000へファイルの内容がロードされていることを確認してみます。
 
 この節のサンプルディレクトリは"050_fs_read_text"です。
 
-まずはapps.img(テキストファイル)を用意します。
+まずはfs.img(テキストファイル)を用意します。
 
 //cmd{
-$ @<b>{echo -n 'HELLO\0' > apps.img}
+$ @<b>{echo -n 'HELLO\0' > fs.img}
 //}
 
-できあがった"apps.img"をkernel.binと同じディレクトリに配置してください。
+できあがった"fs.img"をkernel.binと同じディレクトリに配置してください。
 
-次にapps.imgのロード先である0x00200000を読むようにkernel.binのプログラムを改造します。
+次にfs.imgのロード先である0x00200000を読むようにkernel.binのプログラムを改造します。
 
 前章の"040_intr"ディレクトリのmain.cへ@<list>{050_main_c}のように追記します。
 
@@ -48,7 +48,7 @@ void start_kernel(void *_t __attribute__ ((unused)), struct framebuffer *fb,
 	/* CPUの割り込み有効化 */
 	enable_cpu_intr();
 
-	/* apps.img(テキストファイル)を読む */	/* 追加 */
+	/* fs.img(テキストファイル)を読む */	/* 追加 */
 	char *hello_str = (char *)_fs_start;	/* 追加 */
 	puts(hello_str);			/* 追加 */
 
@@ -57,7 +57,7 @@ void start_kernel(void *_t __attribute__ ((unused)), struct framebuffer *fb,
 		cpu_halt();
 //}
 
-apps.imgが0x00200000へロードされることで、"HELLO\0"が0x00200000から並ぶ事になるため、それをchar *として参照し、puts関数で出力するだけです。
+fs.imgが0x00200000へロードされることで、"HELLO\0"が0x00200000から並ぶ事になるため、それをchar *として参照し、puts関数で出力するだけです。
 
 実行すると@<img>{050_fs_read_text}の様に表示されます。
 
@@ -66,17 +66,17 @@ apps.imgが0x00200000へロードされることで、"HELLO\0"が0x00200000か�
 
 "040_intr"のKBC割り込み時のエコーバックは残っているのでキー入力すると"HELLO"に続いて表示されます。
 
-また、"font.c"にアルファベットは大文字しか用意していないのでapps.imgとして小文字のテキストを用意すると化けます。
+また、"font.c"にアルファベットは大文字しか用意していないのでfs.imgとして小文字のテキストを用意すると化けます。
 
 == ファイルシステムを考える
-前節ではapps.imgというファイル名でkernel.binと同じ階層へ配置しておけば、poibootが0x00200000へロードしてくれることを確認しました。
+前節ではfs.imgというファイル名でkernel.binと同じ階層へ配置しておけば、poibootが0x00200000へロードしてくれることを確認しました。
 
-次は、単なるバイト列である"apps.img"の中に複数の「ファイル」を表現する「ルール」を考えます。本書で「ファイルシステム」として考える機能はこのような「ルール」です。シンプルに以下を考えてみました@<fn>{about_rofs_spec}。
+次は、単なるバイト列である"fs.img"の中に複数の「ファイル」を表現する「ルール」を考えます。本書で「ファイルシステム」として考える機能はこのような「ルール」です。シンプルに以下を考えてみました@<fn>{about_rofs_spec}。
 //footnote[about_rofs_spec][ファイル名がASCIIで28文字までであったり、ファイルサイズが4GBまでだったりしますが、今必要な事以上のことは考えないことにします。]
 
 1. 各「ファイル」は「ヘッダ」と「データ」で構成される
 2. 「ヘッダ」は「ファイル名(28バイト)」と「ファイルサイズ(4バイト)」で構成される
-3. apps.imgには、ファイルが先頭から隙間なく並べられている
+3. fs.imgには、ファイルが先頭から隙間なく並べられている
 4. ファイルシステム領域の終わりは1バイトの0x00で示す
 
 これらのルールを図示すると@<img>{050_rofs_img}の通りとなります。
@@ -247,14 +247,14 @@ $(TARGET): $(OBJS)	# 変更
 
 "$(TARGET)"の依存リストが長くなってきたので、$(OBJS)という変数へ分けました。
 
-実行してみるには、あとファイルシステムイメージ(apps.img)の生成が必要です。次節で作成します。
+実行してみるには、あとファイルシステムイメージ(fs.img)の生成が必要です。次節で作成します。
 
-== ファイルシステムイメージ(apps.img)出力スクリプトを作る
-カーネル側へのファイルシステム機能の追加は終わりましたので、最後にファイルシステムイメージ(apps.img)を生成します。
+== ファイルシステムイメージ(fs.img)出力スクリプトを作る
+カーネル側へのファイルシステム機能の追加は終わりましたので、最後にファイルシステムイメージ(fs.img)を生成します。
 
 サンプルディレクトリは"052_fs_create_fs"です。
 
-「ファイルシステムを考える」の節で説明したルールを満たしたバイナリを"apps.img"として生成できれば何でも良いです。
+「ファイルシステムを考える」の節で説明したルールを満たしたバイナリを"fs.img"として生成できれば何でも良いです。
 
 ここではシェルスクリプトで実装してみました。内容は@<list>{052_sh}の通りです。
 
@@ -262,7 +262,7 @@ $(TARGET): $(OBJS)	# 変更
 #!/bin/bash
 
 FILE_NAME_LEN=28
-FS_IMG_NAME='apps.img'
+FS_IMG_NAME='fs.img'
 
 while [ -n "$1" ]; do
 	# ヘッダ作成
@@ -291,9 +291,9 @@ while [ -n "$1" ]; do
 
 	# 位置変数をシフト
 	shift
-done > ${FS_IMG_NAME}	# whileループ内の出力はapps.imgへ出力
+done > ${FS_IMG_NAME}	# whileループ内の出力はfs.imgへ出力
 
-# ファイルシステムの終わり(0x00)をapps.imgへ追記
+# ファイルシステムの終わり(0x00)をfs.imgへ追記
 echo -ne "\x00" >> ${FS_IMG_NAME}
 //}
 
@@ -303,11 +303,11 @@ echo -ne "\x00" >> ${FS_IMG_NAME}
 
 //cmd{
 $ @<b>{./create_fs.sh ファイル1 ファイル2 ...}
-$ @<b>{ls apps.img}
-apps.img	# apps.imgが生成される
+$ @<b>{ls fs.img}
+fs.img	# fs.imgが生成される
 //}
 
-ここでは、以下のように2つのファイルを作成し、それらのファイルを含むapps.imgを作成してみます。
+ここでは、以下のように2つのファイルを作成し、それらのファイルを含むfs.imgを作成してみます。
 
 //cmd{
 $ @<b>{echo -n "HELLO\0" > HELLO.TXT}		# HELLO.TXTを作成
@@ -318,12 +318,12 @@ $ @<b>{echo -n "FOO\0" > FOO.TXT}		# FOO.TXTを作成
 $ @<b>{hexdump -C FOO.TXT}			# 中身を確認
 00000000  46 4f 4f 00                                       |FOO.|
 00000004
-$ @<b>{./create_fs.sh HELLO.TXT FOO.TXT}	# apps.imgを作成
-$ @<b>{ls apps.img}				# 作成されたことを確認
-apps.img
+$ @<b>{./create_fs.sh HELLO.TXT FOO.TXT}	# fs.imgを作成
+$ @<b>{ls fs.img}				# 作成されたことを確認
+fs.img
 //}
 
-前節の変更を適用して作成したkernel.binとここで作成したapps.imgを実行すると@<img>{052_fs_create_fs}の様に2つのファイルのファイル名とファイルの内容が表示されます。
+前節の変更を適用して作成したkernel.binとここで作成したfs.imgを実行すると@<img>{052_fs_create_fs}の様に2つのファイルのファイル名とファイルの内容が表示されます。
 
 //image[052_fs_create_fs][052_fs_create_fsの実行結果]{
 //}

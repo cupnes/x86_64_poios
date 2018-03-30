@@ -232,13 +232,13 @@ void start_kernel(void)
 
 Makefileの変更点は無いので、makeして生成されたkernel.binを使用します。
 
-apps.imgは、前節のconvertコマンドで"image.bgra"という名前で画像ファイルを用意し、前章で作成したcreate_fs.shを使用して生成します。
+fs.imgは、前節のconvertコマンドで"image.bgra"という名前で画像ファイルを用意し、前章で作成したcreate_fs.shを使用して生成します。
 
 //cmd{
 $ @<b>{convert 元画像ファイル -resize 800x600! -depth 8 image.bgra}
 $ @<b>{./create_fs.sh image.bgra}
-$ @<b>{ls apps.img}
-apps.img	# "apps.img"が生成される
+$ @<b>{ls fs.img}
+fs.img	# "fs.img"が生成される
 //}
 
 #@# 全景を見せるために白黒だがここにも画像を掲載
@@ -249,7 +249,7 @@ apps.img	# "apps.img"が生成される
 #@# todo: 追加
 //}
 
-なお、main.c(@<list>{061_main_c})にてmemcpy関数へ指定するコピーサイズ(第3引数)はstruct fileのsizeメンバを使用していました。そのため、例えばフレームバッファサイズが640x480な環境で実行する際は上記のconvertコマンドとcreate_fs.shコマンドでapps.imgさえ作り直せば、kernel.binは変更なしで画面表示が行えます。
+なお、main.c(@<list>{061_main_c})にてmemcpy関数へ指定するコピーサイズ(第3引数)はstruct fileのsizeメンバを使用していました。そのため、例えばフレームバッファサイズが640x480な環境で実行する際は上記のconvertコマンドとcreate_fs.shコマンドでfs.imgさえ作り直せば、kernel.binは変更なしで画面表示が行えます。
 
 == ファイルシステムからファイルの一覧情報を取得する
 これまではopen関数を使用して「このファイル名のファイルをくれ」とファイルシステムへ問い合わせていました。しかし、画像ビューアを作成するにはファイルシステムに存在するファイルのリストを問い合わせる必要があります。まだこのような問い合わせにはファイルシステム(fs.c)が対応していないので、そのための機能追加を行います。
@@ -332,7 +332,7 @@ void start_kernel(void *_t __attribute__ ((unused)), struct framebuffer *_fb)
 }
 //}
 
-試しに前章で"HELLO.TXT"と"FOO.TXT"を格納したapps.imgで実行すると@<img>{062_iv_ls}のように表示されます。
+試しに前章で"HELLO.TXT"と"FOO.TXT"を格納したfs.imgで実行すると@<img>{062_iv_ls}のように表示されます。
 
 //image[062_iv_ls][062_iv_lsの実行結果]{
 //}
@@ -391,7 +391,7 @@ void iv_init(void);
 #endif
 //}
 
-@<list>{063_iv_h_iv_init}で"MAX_IV_FILES"を100と定義しているため、画像ビューアで扱えるファイル数の上限は100です。100という数に特に根拠はありませんが、増やす場合はpoiboot.confで設定したapps.imgのロード先アドレスの領域が十分であるかUEFI Shellのmemmapコマンドで確認してください@<fn>{about_max_iv_files}。
+@<list>{063_iv_h_iv_init}で"MAX_IV_FILES"を100と定義しているため、画像ビューアで扱えるファイル数の上限は100です。100という数に特に根拠はありませんが、増やす場合はpoiboot.confで設定したfs.imgのロード先アドレスの領域が十分であるかUEFI Shellのmemmapコマンドで確認してください@<fn>{about_max_iv_files}。
 //footnote[about_max_iv_files][800x600の解像度の時、1枚のBGRA画像のサイズは2MB弱のため、100枚の時はおおよそ200MB弱の領域が必要です。搭載メモリ(RAM)が4GB以上の時、0x0000000100000000のアドレスには、そこより小さいアドレスで割り当てた3GB分を引いた残り1GBのメモリが割り当てられている様です。]
 
 そして、iv_init関数を呼び出すようmain.cを書き変えます(@<list>{063_main_c})。
@@ -449,7 +449,7 @@ $(TARGET): $(OBJS)
 # ・・・ 省略 ・・・
 //}
 
-この時点で一度、動作確認してみると良いかと思います。("image.bgra"だけを格納した"apps.img"などを使うと良いです。)
+この時点で一度、動作確認してみると良いかと思います。("image.bgra"だけを格納した"fs.img"などを使うと良いです。)
 
 === KBC割り込み時の処理を実装する(iv_kbc_handler)
 #@# まずはkbc.cからiv_handlerを呼び出すようにして、
@@ -545,9 +545,9 @@ void kbc_init(void)
 
 これで追加・変更は終わりです。
 
-convertコマンドでBGRA画像を何枚か用意し、create_fs.shスクリプトでapps.imgを生成してください。
+convertコマンドでBGRA画像を何枚か用意し、create_fs.shスクリプトでfs.imgを生成してください。
 
-#@# apps.imgのサイズは第1章で確認したアプリケーション領域のサイズまで大丈夫です。
+#@# fs.imgのサイズは第1章で確認したアプリケーション領域のサイズまで大丈夫です。
 
 実行すると、画像が表示され、'j'キー/'k'キーで画像送り/戻りが確認できます。
 
