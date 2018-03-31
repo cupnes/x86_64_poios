@@ -241,8 +241,6 @@ $ @<b>{ls fs.img}
 fs.img	# "fs.img"が生成される
 //}
 
-#@# 全景を見せるために白黒だがここにも画像を掲載
-
 実行すると@<img>{061_iv_view_a_image}のように画像が表示されます。実はこの節のサンプルを実行したものが表紙の状態です。
 
 //image[061_iv_view_a_image][061_iv_view_a_imageの実行結果]{
@@ -278,10 +276,10 @@ struct file *open(char *name)
 /* 追加(ここから) */
 unsigned long long get_files(struct file *files[])
 {
-	struct file *f = (struct file *)FS_START_ADDR;
+	struct file *f = fs_start;
 	unsigned int num;
 
-	for (num = 0; f->name[0]; num++) {
+	for (num = 0; f->name[0] != END_OF_FS; num++) {
 		files[num] = f;
 		f = (struct file *)((unsigned long long)f + sizeof(struct file)
 				    + f->size);
@@ -297,6 +295,7 @@ fs.hへプロトタイプ宣言の追加も行います(@<list>{062_fs_h})。
 //list[062_fs_h][062_iv_ls/include/fs.h][c]{
 /* ・・・ 省略 ・・・ */
 
+void fs_init(void *_fs_start);
 struct file *open(char *name);
 unsigned long long get_files(struct file *files[]);	/* 追加 */
 
@@ -363,6 +362,7 @@ void start_kernel(void *_t __attribute__ ((unused)), struct framebuffer *_fb)
 
 struct file *iv_files[MAX_IV_FILES];
 unsigned long long iv_num_files;
+unsigned long long iv_idx = 0;
 
 void view(unsigned long long idx)
 {
@@ -372,11 +372,11 @@ void view(unsigned long long idx)
 void iv_init(void)
 {
 	iv_num_files = get_files(iv_files);
-	view(0);
+	view(iv_idx);
 }
 //}
 
-iv_init関数はファイルシステム内の全てのファイルを画像ファイルとして扱います("ファイルシステム内には画像ファイルしか無いものとする"と仕様で決めた通りです)。また、iv.cの内部で使う関数としてファイルシステム上のN番目(引数で指定)の画像表示を行うview関数も作成しました。
+iv_init関数はファイルシステム内の全てのファイルを画像ファイルとして扱います("ファイルシステム内には画像ファイルしか無いものとする"と仕様で決めた通りです)。また、iv.cの内部で使う関数としてファイルシステム上のidx番目(引数で指定)の画像表示を行うview関数も作成しました。
 
 iv.hは@<list>{063_iv_h_iv_init}の通りです。
 

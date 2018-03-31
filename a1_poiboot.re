@@ -46,7 +46,7 @@ BootServicesのExitBootServices関数の呼び出し方は少々特殊です。�
 
 ExitBootServices関数を呼び出すために必要な手続きとExitBootServices関数の呼び出しはexit_boot_services関数にまとめています。exit_boot_services関数の実装は@<list>{a1_exit_boot_services}の通りです。
 
-//listnum[a1_exit_boot_services][A01_poiboot/libuefi/mem.c][c]{
+//list[a1_exit_boot_services][A01_poiboot/libuefi/mem.c][c]{
 void exit_boot_services(void *IH)
 {
 	unsigned long long status;

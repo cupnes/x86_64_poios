@@ -836,7 +836,7 @@ Makefileの変更は@<list>{040_makefile}の通りです。
 
 //list[040_makefile][040_intr/Makefile]{
 /* ・・・ 省略 ・・・ */
-$(TARGET): main.o fbcon.o fb.o font.o kbc.o x86.o intr.o pic.o  # 変更
+$(TARGET): main.o fbcon.o fb.o font.o kbc.o x86.o intr.o pic.o handler.o  # 変更
 	ld $(LDFLAGS) -o $@ $+
 /* ・・・ 省略 ・・・ */
 %.o: %.c
@@ -845,7 +845,7 @@ $(TARGET): main.o fbcon.o fb.o font.o kbc.o x86.o intr.o pic.o  # 変更
 	gcc $(CFLAGS) -c -o $@ $<	# 追加
 //}
 
-@<list>{040_makefile}の「変更」の箇所で"intr.o"と"pic.o"を追加しています。
+@<list>{040_makefile}の「変更」の箇所で"intr.o"と"pic.o"と"handler.o"を追加しています。
 
 === haltで待つようにする
 これでも良いのですが、「何もせず待つ」の無限ループがあまりエコではないです。

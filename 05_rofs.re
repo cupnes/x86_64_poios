@@ -91,7 +91,11 @@ fs.imgが0x00200000へロードされることで、"HELLO\0"が0x00200000から
 
 ファイルシステムに関しては"fs.h"と"fs.c"へ記述することにします。
 
-"fs.h"へは「ファイル構造体(struct file)の定義」と「ファイル名を渡すとファイルシステム上の対応するstruct file *を返す関数(open)のプロトタイプ宣言」を行います(@<list>{051_fs_h})。
+まず、"fs.h"を作成します(@<list>{051_fs_h})。fs.hでは以下を行います。
+
+ * ファイル構造体(struct file)の定義
+ * fs_init関数のプロトタイプ宣言
+ * open関数のプロトタイプ宣言
 
 //list[051_fs_h][051_fs_read_fs/include/fs.h][c]{
 #ifndef _FS_H_
@@ -105,12 +109,13 @@ struct file {
 	unsigned char data[0];
 };
 
+void fs_init(void *_fs_start);
 struct file *open(char *name);
 
 #endif
 //}
 
-次に、"fs.c"へopen関数の実装を行っていきたいところですが、先に"common.c"と"common.h"というソースファイルを用意して「文字列比較関数(strcmp)」と「ヌルポインタ(NULL)」を定義しておきます。
+次に、"fs.c"へ各関数の実装を行っていきたいところですが、先に"common.c"と"common.h"というソースファイルを用意して「文字列比較関数(strcmp)」と「ヌルポインタ(NULL)」を定義しておきます。
 
 "common.c"の内容は@<list>{051_common_c}の通りです。
 
@@ -157,20 +162,29 @@ int strcmp(char *s1, char *s2);
 #endif
 //}
 
-これらを使用して、"open"関数をfs.cに作成します(@<list>{051_fs_c})。
+これらを使用して、fs.cへfs_init関数とopen関数を定義します(@<list>{051_fs_c})。それぞれの関数が行うことは以下の通りです。
 
-#@# todo: fs_init()を追加する
+ * fs_init関数
+ ** 引数で渡されたポインタをfs.c内のファイルシステムスタートアドレス(struct file *fs_start)へ設定
+ * open関数
+ ** ファイル名を渡すとファイルシステム上の対応するstruct file *を返す
 
 //list[051_fs_c][051_fs_read_fs/fs.c][c]{
 #include <fs.h>
 #include <common.h>
 
-#define FS_START_ADDR	0x0000000000200000
 #define END_OF_FS	0x00
+
+struct file *fs_start;
+
+void fs_init(void *_fs_start)
+{
+	fs_start = _fs_start;
+}
 
 struct file *open(char *name)
 {
-	struct file *f = (struct file *)FS_START_ADDR;
+	struct file *f = fs_start;
 	while (f->name[0] != END_OF_FS) {
 		if (!strcmp(f->name, name))
 			return f;
@@ -183,7 +197,7 @@ struct file *open(char *name)
 }
 //}
 
-@<list>{051_fs_c}では、ファイルシステム先頭アドレスの定数名を"FS_START_ADDR"へ変更しました。open関数内はファイルシステムの終わりまでwhileループを回し、引数で与えたファイル名と同じものが見つかればstruct fileのポインタを返しています(見つからなければNULLを返します)。
+open関数は、ファイルシステムの終わりまでwhileループを回し、引数で与えたファイル名と同じものが見つかればstruct fileのポインタを返しています(見つからなければNULLを返します)。
 
 そして、追加した関数を使用して複数のテキストファイル"HELLO.TXT"と"FOO.TXT"を読む処理をmain.cへ追加してみます(@<list>{051_main_c})。
 
@@ -195,6 +209,9 @@ struct file *open(char *name)
 void start_kernel(void *_t __attribute__ ((unused)), struct framebuffer *fb)
 {
 	/* ・・・ 省略 ・・・ */
+
+	/* ファイルシステムの初期化 */	/* 追加 */
+	fs_init(_fs_start);		/* 追加 */
 
 	/* CPUの割り込み有効化 */
 	enable_cpu_intr();
@@ -297,7 +314,7 @@ done > ${FS_IMG_NAME}	# whileループ内の出力はfs.imgへ出力
 echo -ne "\x00" >> ${FS_IMG_NAME}
 //}
 
-@<list>{052_sh}の内容についてはコメントに記載のとおりです。
+スクリプトの内容についてはコメントに記載のとおりです。
 
 スクリプトは以下のように引数にファイルシステムへ格納したいファイルを指定して実行します。
 
