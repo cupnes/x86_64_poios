@@ -18,11 +18,17 @@ for img in $imglst; do
 	# 出力画像サイズ確定
 	nosuff=$(echo $name | rev | cut -d'.' -f2- | rev)
 	case $nosuff in
+	'intro')
+		WIDTH=1700
+		;;
 	'020_fill_qemu')
 		WIDTH=1200
 		;;
 	'020_fill_lenovo')
 		WIDTH=1200
+		;;
+	'linkerscript')
+		WIDTH=1800
 		;;
 	'022_font')
 		WIDTH=1000
@@ -30,8 +36,14 @@ for img in $imglst; do
 	'030_keyinput_polling')
 		WIDTH=1000
 		;;
+	'4_pic')
+		WIDTH=1800
+		;;
+	'5_fs')
+		WIDTH=1800
+		;;
 	'050_fs_read_text')
-		WIDTH=1000
+		WIDTH=800
 		;;
 	'050_rofs_img')
 		WIDTH=1400
@@ -39,17 +51,20 @@ for img in $imglst; do
 	'052_fs_create_fs')
 		WIDTH=1000
 		;;
+	'6_iv')
+		WIDTH=2000
+		;;
 	'060_qemu')
-		WIDTH=400
+		WIDTH=1000
 		;;
 	'060_lenovo')
-		WIDTH=800
+		WIDTH=1000
 		;;
 	'061_iv_view_a_image')
 		WIDTH=1400
 		;;
 	'062_iv_ls')
-		WIDTH=400
+		WIDTH=800
 		;;
 	'063_iv_image_viewer_1')
 		WIDTH=1400
