@@ -52,7 +52,7 @@
 また、本書で扱うサンプルコードとコンパイル済みバイナリは以下のGitHubで公開しています。
 
  * ソースコード
- ** @<href>{https://github.com/cupnes/x86_64_poios_samples}
+ ** @<href>{https://github.com/cupnes/x86_64_jisaku_os_samples}
  * コンパイル済みバイナリ
  ** @<href>{todo: 追加}
 
