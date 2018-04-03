@@ -86,8 +86,11 @@ QEMUで使用するUEFIファームウェア"OVMF"にはUEFIシェルが内蔵�
 //cmd{
 ■ APTでovmfパッケージをインストールした場合
 $ @<b>{qemu-system-x86_64 -m 4G -bios OVMF.fd}
+
 ■ OVMF.fdをダウンロードしてきた場合
 $ @<b>{qemu-system-x86_64 -m 4G -bios OVMF.fdへのパス指定}
+例)
+$ @<b>{qemu-system-x86_64 -m 4G -bios ~/OVMF.fd}
 //}
 
 "-m 4G"はQEMU上の仮想マシンのメモリ設定です。4GBに設定している理由は本章最後のコラムで説明します。

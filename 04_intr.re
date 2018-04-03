@@ -165,7 +165,7 @@ void gdt_init(void);	/* 追加 */
 #@# //footnote[intel_sdm_324][3.2.4 Segmentation in IA-32e Mode - Intel 64 and IA-32 Architectures Software Developer's Manual]
 
 == CPU: IDT設定
-IDT(Interrupt Descriptor Table)は、割り込みと例外のハンドラを管理する全256エントリ・各エントリ16バイトのテーブルです@<fn>{about_idt_name}。割り込みも例外も同じテーブルで扱う都合上、x86では割り込み番号0〜20番(IDTのインデックス0〜20)を例外、割り込み番号32〜255番(IDTのインデックス32〜255)を割り込みとしています(@<fn>{intel_sdm_vol3_615})。
+IDT(Interrupt Descriptor Table)は、割り込みと例外のハンドラを管理する全256エントリ・各エントリ16バイトのテーブルです@<fn>{about_idt_name}。割り込みも例外も同じテーブルで扱う都合上、x86では割り込み番号0〜20番(IDTのインデックス0〜20)を例外、割り込み番号32〜255番(IDTのインデックス32〜255)を割り込みとしています@<fn>{intel_sdm_vol3_615}。
 //footnote[about_idt_name]["IDT"という名前ですが割り込み(Interrupt)も例外(Exception)も管理します。]
 //footnote[intel_sdm_vol3_615][6.15 EXCEPTION AND INTERRUPT REFERENCE - Intel 64 and IA-32 Architectures Software Developer's Manual Volume 3 : System Programming Guide]
 
