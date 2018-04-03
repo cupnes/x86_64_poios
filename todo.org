@@ -7,8 +7,6 @@
 -> svgからImageMagickで出力されたものは問題なさそう
 ** TODO intro.re:50: ** @<href>{todo: 追加} (サンプルコードコンパイル済バイナリのDL URL)
 
-** STARTED 全体: column、noteは行頭に全角スペース入れる
-- 04まで完了
 ** ======= ささい
 ** TODO 1.2: UEFIシェルを起動する: QEMUの場合にはコマンド例を載せると良い
 ** TODO listの"コード.c(...)"の(...)は不要
