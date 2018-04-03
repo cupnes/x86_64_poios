@@ -1,4 +1,7 @@
 * todo
+** STARTED 全体最終見直し
+- 2章から
+
 ** TODO 2章: poiboot_loadable_kernel_formatは"textセクション"の後は「その他のセクション」で良い
 - でないとtextセクション以降にもセクションの並びに決まりがあるように見える
 
