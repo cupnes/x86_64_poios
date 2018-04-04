@@ -7,6 +7,8 @@
 ** STARTED 350dpiチェック
 -> svgからImageMagickで出力されたものは問題なさそう
 ** TODO intro.re:50: ** @<href>{todo: 追加} (サンプルコードコンパイル済バイナリのDL URL)
+https://qiita.com/keita69sawada/items/da6d8f6b6fb8f05ca670
+
 ** ======= ささい
 ** TODO listの"コード.c(...)"の(...)は不要
 ** STARTED カッコの中に@<fn>を書いている箇所を修正(括弧を消す)
