@@ -12,7 +12,9 @@
 == CPU: セグメンテーション設定
 セグメンテーションとは、メモリ空間を分割して管理する方法の一つで、「セグメント」と呼ぶ単位で管理します。各セグメントは「開始アドレス(Base Address)」と「セグメントサイズ(Segment Limit)」を持ち、セグメント毎に「コード(機械語)用である」とか「データ用である」とか、「カーネルモードでしかアクセスを許さない」といった「属性」を設定できます。
 
-x86 CPUには、命令実行時のコード・データ・スタックについて、それぞれどのセグメントを参照するのかを指定するレジスタとして"CS(Code Segment)"・"DS(Data Segment)"・"SS(Stack Segment)"があるのですが、「IA-32eモード(64ビットのモード)では一般的には無効@<fn>{intel_sdm_324}」とのことです。ただ、「完全には無効ではない@<fn>{intel_sdm_324_2}」旨の括弧書きもあるため、一応、初期化を行います。ただし、メモリ管理方法は今や「ページング」と呼ばれる方法が主流であり、セグメントについて詳しい説明は行いません(あまり実りは無いので)。
+x86 CPUには、命令実行時のコード・データ・スタックについて、それぞれどのセグメントを参照するのかを指定するレジスタとして"CS(Code Segment)"・"DS(Data Segment)"・"SS(Stack Segment)"があるのですが、「IA-32eモード(64ビットのモード)では一般的には無効@<fn>{intel_sdm_324}」とのことです。
+
+ただ、「完全には無効ではない@<fn>{intel_sdm_324_2}」旨の括弧書きもあるため、一応、初期化を行います。ただし、メモリ管理方法は今や「ページング」と呼ばれる方法が主流であり、セグメントについて詳しい説明は行いません(あまり実りは無いので)。
 //footnote[intel_sdm_324][3.2.4 Segmentation in IA-32e Mode - Intel 64 and IA-32 Architectures Software Developer's Manual]
 //footnote[intel_sdm_324_2][同じく、3.2.4 Segmentation in IA-32e Mode - Intel 64 and IA-32 Architectures Software Developer's Manual]
 
