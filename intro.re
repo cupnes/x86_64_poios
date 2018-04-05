@@ -54,6 +54,6 @@
  * ソースコード
  ** @<href>{https://github.com/cupnes/x86_64_jisaku_os_samples}
  * コンパイル済みバイナリ
- ** @<href>{todo: 追加}
+ ** @<href>{https://github.com/cupnes/x86_64_jisaku_os_samples/releases}
 
 サンプルコードは節ごとにディレクトリが分かれています。本書の各節冒頭で「この節のサンプルコードは"～"のディレクトリです」のように説明していますので、適宜参照してください。
