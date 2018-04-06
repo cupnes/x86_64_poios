@@ -326,7 +326,7 @@ inline unsigned char io_read(unsigned short addr);
 次に、IDT初期化関数(intr_init)とIDTの各デスクリプタを設定する関数(set_intr_desc)を"intr.c"というソースファイルへ実装します。それぞれの関数では以下を行うことにします。
 
  * intr_init関数: IDTの全エントリをdefault_handlerで初期化
- * set_intr_desc関数: 引数で指定されたハンドラと割り込み番号で当該デスクリプタを設定する
+ * set_intr_desc関数: 引数で指定されたハンドラと割り込み番号でデスクリプタを設定する
 
 intr.cは@<list>{040_intr_c}の通りです。
 
