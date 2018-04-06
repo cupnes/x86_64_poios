@@ -708,7 +708,7 @@ IOアドレス(マスタ/スレーブ)	レジスタ名と書き込む値の意�
 　	bit2-1: EOI対象のIR番号指定
 //}
 
-こちらも「指定された割り込みのEOIを設定する」関数を用意します。"set_pic_eoi"という名前でpic.cへ追加します(@<list>{040_set_pic_eoi})。
+「指定された割り込みのEOIを設定する」関数を用意します。"set_pic_eoi"という名前でpic.cへ追加します(@<list>{040_set_pic_eoi})。
 
 //list[040_set_pic_eoi][040_intr/pic.c(set_pic_eoi())][c]{
 #define MPIC_ICW1_ADDR	0x0020
