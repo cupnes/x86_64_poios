@@ -14,10 +14,6 @@ https://qiita.com/keita69sawada/items/da6d8f6b6fb8f05ca670
 
 ** ======= ささい
 ** TODO listの"コード.c(...)"の(...)は不要
-** STARTED カッコの中に@<fn>を書いている箇所を修正(括弧を消す)
-- 3章冒頭は修正済
-- 他にあるか確認
-  - 4のIDT設定とか
 ** DONE サンプルバイナリpoibootが全ディレクトリ同じか確認
 同じ
 
