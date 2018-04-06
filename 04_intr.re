@@ -358,7 +358,7 @@ void intr_init(void)
 }
 //}
 
-@<list>{040_intr_c}について、set_intr_desc関数では、(見た通りですが、)interrupt_descriptor構造体の配列としてintr.c冒頭で定義したidtへ設定を行っています。どういったパラメータを設定する必要があるかは見たとおりですが、補足として、"type"はデスクリプタタイプで割り込み/例外の場合は14番を指定します。また、"p"は"Present"で、デスクリプタの存在フラグです@<fn>{descriptor_p_flag}。
+@<list>{040_intr_c}について、set_intr_desc関数では、interrupt_descriptor構造体の配列としてintr.c冒頭で定義したidtへ設定を行っています。どういったパラメータを設定する必要があるかは見たとおりですが、補足として、"type"はデスクリプタタイプで割り込み/例外の場合は14番を指定します。また、"p"は"Present"で、デスクリプタの存在フラグです@<fn>{descriptor_p_flag}。
 //footnote[descriptor_p_flag][pフラグを0に設定しておくと、そのデスクリプタへのアクセスを例外(割り込み番号11番、Segment Not Present)で検出できます。]
 
 併せて、intr.hを作成し、set_intr_desc関数とintr_init関数の宣言を追加します(@<list>{040_intr_h_set_intr_desc})。
