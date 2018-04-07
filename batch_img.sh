@@ -22,16 +22,16 @@ for img in $imglst; do
 		WIDTH=1700
 		;;
 	'020_fill_qemu')
-		WIDTH=1200
+		WIDTH=1100
 		;;
 	'020_fill_lenovo')
-		WIDTH=1200
+		WIDTH=1100
 		;;
 	'linkerscript')
 		WIDTH=1800
 		;;
 	'022_font')
-		WIDTH=1000
+		WIDTH=900
 		;;
 	'030_keyinput_polling')
 		WIDTH=1000
@@ -66,10 +66,7 @@ for img in $imglst; do
 	'062_iv_ls')
 		WIDTH=800
 		;;
-	'063_iv_image_viewer_1')
-		WIDTH=1400
-		;;
-	'063_iv_image_viewer_2')
+	'063_iv_image_viewer')
 		WIDTH=1400
 		;;
 	*)

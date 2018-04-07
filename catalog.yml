@@ -10,6 +10,7 @@ CHAPS:
   - 06_image_viewer.re
 
 APPENDIX:
+  - a0_cover_app.re
   - a1_poiboot.re
   - a2_gpt.re
 
