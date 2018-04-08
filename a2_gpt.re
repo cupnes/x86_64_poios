@@ -1,7 +1,7 @@
 = GPTフォーマット方法
 UEFIファームウェアは、起動用のストレージ等のGPTあるいはFATフォーマットされた第1パーティションを認識します。そのため、GPTあるいはFATでフォーマットしていないとUEFIファームウェアが"EFI/BOOT/BOOTX64.EFI"という名前で配置したブートローダー(poiboot)を見つけてくれません。
 
-ここでは旧来のMS-DOSパーティションテーブルではなく、UEFIで新仕様として加わったGPT(GUID Partition Table)形式でUSBフラッシュメモリをフォーマットしてみます。
+ここでは旧来のMS-DOSパーティションテーブルではなく、UEFIで新仕様として加わったGPT(GUID Partition Table)形式でUSBフラッシュメモリをフォーマットする方法を紹介します。
 
 GPT形式のフォーマットに、ここではgdiskコマンド(fdiskのGPT対応版)とmkfsを使用します。
 
