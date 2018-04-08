@@ -38,7 +38,7 @@ poiboot.cでは以下の処理を行っています。
 
 「4. fs.imgが存在すればRAMへロード」は、"fs.img"という名前のバイナリが存在すれば、poiboot.conf設定(本書では0x0000000100000000を想定)のアドレスへロードします。
 
-「5. カーネルへ渡す情報の準備」について、ブートローダーからカーネルへ渡す情報はSystemTableとfbの先頭アドレスです。SystemTableはefi_main関数の第2引数で得られるものです。fbはカーネルへフレームバッファの情報を渡すために用意したstruct fb構造体の変数で、init_fb関数で作成しています。
+「5. カーネルへ渡す情報の準備」について、ブートローダーからカーネルへ渡す情報はSystemTable・fb・fsの先頭アドレスです。SystemTableはefi_main関数の第2引数で得られるものです。fbはカーネルへフレームバッファの情報を渡すために用意したstruct fb構造体の変数で、init_fb関数で作成しています。fsはpoiboot.confの設定値が渡ることになります。
 
 「6. UEFIのboot servicesを終了させる」では、BootServicesのExitBootServices関数を呼び出し、UEFIファームウェアが様々なリソースを管理しているモードを終了します。ExitBootServicesを呼び出す処理は前著まででは説明していない+αの内容で、次節で説明します。
 
