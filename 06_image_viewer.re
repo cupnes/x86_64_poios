@@ -348,9 +348,9 @@ void start_kernel(void *_t __attribute__ ((unused)), struct framebuffer *_fb)
 そして、他の機能とやり取りするインタフェースとなる関数としては以下の2つを作成します。
 
  * iv_init: 初期化処理。ファイルシステムからファイルリスト取得と、最初の1枚目の画像表示を行う
- ** start_kernel関数で各種初期化処理終了後、割り込み有効化直前に呼び出される
+ ** start_kernel関数で各種初期化処理終了後に呼び出す
  * iv_kbc_handler: キー入力に応じた処理を行う
- ** KBCハンドラから呼び出される
+ ** KBCハンドラから呼び出す
 
 === 最初の画像表示処理を実装する(iv_init)
 まず、iv_init関数を実装します(@<list>{063_iv_init})。
