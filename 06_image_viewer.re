@@ -393,7 +393,7 @@ void iv_init(void);
 //}
 
 @<list>{063_iv_h_iv_init}で"MAX_IV_FILES"を100と定義しているため、画像ビューアで扱えるファイル数の上限は100です。100という数に特に根拠はありませんが、増やす場合はpoiboot.confで設定したfs.imgのロード先アドレスの領域が十分であるかUEFI Shellのmemmapコマンドで確認してください@<fn>{about_max_iv_files}。
-//footnote[about_max_iv_files][800x600の解像度の時、1枚のBGRA画像のサイズは2MB弱のため、100枚の時はおおよそ200MB弱の領域が必要です。目安の参考として、搭載メモリ(RAM)が4GB以上の時、0x0000000100000000のアドレスには、そこより小さいアドレスで割り当てた3GB分を引いた残り1GBのメモリが割り当てられている様です。]
+//footnote[about_max_iv_files][800x600の解像度の時、1枚のBGRA画像のサイズは2MB弱のため、100枚の時はおおよそ200MB弱の領域が必要です。]
 
 そして、iv_init関数を呼び出すようmain.cを書き変えます(@<list>{063_main_c})。
 
